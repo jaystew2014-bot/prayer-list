@@ -20,7 +20,6 @@
   .glow.b { bottom:-35vw; right:-25vw; background:radial-gradient(circle, rgba(160,30,50,.22) 0%, rgba(160,30,50,0) 60%); animation:drift2 58s ease-in-out infinite alternate; }
   @keyframes drift1 { from { transform:translate(0,0); } to { transform:translate(18vw,12vh); } }
   @keyframes drift2 { from { transform:translate(0,0); } to { transform:translate(-16vw,-10vh); } }
-  .cross { position:fixed; top:56%; left:50%; width:34vh; height:46vh; transform:translate(-50%,-50%); opacity:.055; z-index:1; pointer-events:none; }
   .frame { position:fixed; inset:2.2vh 1.6vw; border:1px solid rgba(217,178,90,.45); pointer-events:none; }
   .frame::after { content:''; position:absolute; inset:.9vh .6vw; border:1px solid rgba(217,178,90,.18); }
 
@@ -45,9 +44,6 @@
     color:var(--gold); font-size:5.2vh; margin-bottom:3.4vh; }
   .group h2::before, .group h2::after { content:''; width:6vw; height:1px; background:rgba(217,178,90,.6); }
   .entry { margin-bottom:3.2vh; }
-  .group h2 { margin-bottom:1.2vh; }
-  .vline { font-family:'Playfair Display', Georgia, serif; font-style:italic; font-size:2.4vh; color:rgba(236,217,166,.82); margin:0 0 3.6vh; }
-  .vline span { font-family:'Montserrat', Arial, sans-serif; font-style:normal; font-size:1.5vh; letter-spacing:.24em; color:var(--gold); margin-left:1vw; }
   .date { font-size:1.7vh; font-weight:600; letter-spacing:.32em; text-transform:uppercase; color:var(--gold); padding-bottom:1vh; }
   .name { font-weight:600; font-size:5vh; letter-spacing:.05em; text-transform:uppercase; line-height:1.15; }
   .sub { color:var(--gold-soft); font-weight:500; font-size:2.4vh; letter-spacing:.28em; text-transform:uppercase; margin:.5vh 0; }
@@ -66,7 +62,6 @@
 </head>
 <body>
   <div class="glow a"></div><div class="glow b"></div>
-  <svg class="cross" viewBox="0 0 60 80" aria-hidden="true"><path d="M24 0h12v22h24v12H36v46H24V34H0V22h24z" fill="#d9b25a"/></svg>
   <div class="frame"></div>
   <header>
     <div class="church" id="church">Whitehouse Church of God in Christ</div>
@@ -88,11 +83,6 @@
   var SRC = 'https://script.google.com/macros/s/AKfycbzcFaVFS4n-bWvzG9hpX1CDxLVIeSpvKijiQdrmE155D93uLo7nsO3fmUW5iRQRupfB2g/exec';
   var REFRESH_MS = 60 * 1000;
   var SMALL = { 'The Family of': 1, 'and Family': 1 };
-  var VERSES = {
-    'Bereaved Families': ['\u201cBlessed are they that mourn: for they shall be comforted.\u201d', 'MATTHEW 5:4'],
-    'Sick & Shut-In': ['\u201cThe prayer of faith shall save the sick.\u201d', 'JAMES 5:15'],
-    'Prayer List': ['\u201cPray without ceasing.\u201d', '1 THESSALONIANS 5:17']
-  };
   var current = '', pending = null;
   var track = document.getElementById('track'), view = document.getElementById('view');
 
@@ -108,11 +98,6 @@
     d.groups.forEach(function (g) {
       var grp = el('div', 'group');
       grp.appendChild(el('h2', null, g.title));
-      if (VERSES[g.title]) {
-        var v = el('div', 'vline', VERSES[g.title][0]);
-        v.appendChild(el('span', null, VERSES[g.title][1]));
-        grp.appendChild(v);
-      }
       g.names.forEach(function (lines) {
         var en = el('div', 'entry');
         lines.forEach(function (t) { en.appendChild(el('div', SMALL[t] ? 'sub' : 'name', t)); });
