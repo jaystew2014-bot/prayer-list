@@ -50,13 +50,6 @@
   .add b { color:var(--gold); font-weight:700; }
   .verse { text-align:right; font-family:'Playfair Display', Georgia, serif; font-style:italic; font-size:2.3vh; color:rgba(255,255,255,.85); }
   .verse small { display:block; margin-top:.4vh; font-family:'Montserrat', Arial, sans-serif; font-style:normal; font-size:1.5vh; letter-spacing:.3em; color:var(--gold); }
-  .bigqr { position:fixed; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    background:radial-gradient(ellipse 60% 60% at 50% 50%, #3d0812 0%, #1a040b 70%, #12030a 100%);
-    opacity:0; visibility:hidden; transition:opacity .8s ease, visibility .8s; }
-  .bigqr.on { opacity:1; visibility:visible; }
-  .bigqr h3 { font-family:'Playfair Display', Georgia, serif; font-weight:700; font-size:6vh; margin-bottom:3vh; }
-  .bigqr .qr { width:48vh; height:48vh; padding:2.4vh; border-radius:2vh; }
-  .bigqr p { margin-top:3vh; color:var(--gold); font-size:2.8vh; font-weight:600; letter-spacing:.06em; }
   @keyframes roll { from { transform:translateY(0); } to { transform:translateY(-50%); } }
 </style>
 </head>
@@ -75,7 +68,6 @@
     </div>
     <div class="verse">“Pray one for another.”<small>JAMES 5:16</small></div>
   </footer>
-  <div class="bigqr" id="bigqr"><h3>Add a Name to the Prayer List</h3><div id="bigqrslot"></div><p>Point your phone camera here, or tap Prayer Requests in the Church Connect app</p></div>
 <script>
 (function () {
   var DATA = null;
@@ -137,27 +129,9 @@
     if (!current || !moving) { current = key; build(d); return; }
     pending = d;                                         // swap at the end of the loop
   }
-  var big = document.getElementById('bigqr'), showing = false, BIG_MS = 6000;
-  document.getElementById('bigqrslot').appendChild(document.querySelector('.add .qr').cloneNode(true));
-  function showBig() {
-    if (showing) return;
-    showing = true;
-    track.style.animationPlayState = 'paused';
-    big.className = 'bigqr on';
-    setTimeout(function () {
-      big.className = 'bigqr';
-      track.style.animationPlayState = 'running';
-      showing = false;
-    }, BIG_MS);
-  }
   track.addEventListener('animationiteration', function () {
     if (pending) { current = JSON.stringify(pending); build(pending); pending = null; }
-    showBig();
   });
-  setInterval(function () {                              // short or empty list: show every 45 seconds
-    var moving = track.style.animation && track.style.animation !== 'none';
-    if (!moving) showBig();
-  }, 45000);
 
   var loading = null;
   window.__prayerData = function (d) { loading = null; receive(d); };
