@@ -133,17 +133,20 @@
     if (pending) { current = JSON.stringify(pending); build(pending); pending = null; }
   });
 
+  var loading = null;
+  window.__prayerData = function (d) { loading = null; receive(d); };
   function refresh() {
-    if (window.google && google.script && google.script.run) { google.script.run.withSuccessHandler(receive).getList(); return; }
-    if (!SRC || SRC.indexOf('__') === 0 || !window.fetch) return;
-    fetch(SRC + '?format=json', { cache: 'no-store' })
-      .then(function (r) { return r.json(); })
-      .then(receive)
-      .catch(function () { if (!current) setTimeout(refresh, 5000); });
+    if (loading) { try { loading.parentNode.removeChild(loading); } catch (e) {} }
+    var s = document.createElement('script');
+    s.src = SRC + '?callback=__prayerData&t=' + new Date().getTime();
+    s.onerror = function () { loading = null; if (!current) setTimeout(refresh, 5000); };
+    loading = s;
+    document.getElementsByTagName('head')[0].appendChild(s);
   }
 
   function start() { refresh(); setInterval(refresh, REFRESH_MS); }
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start();
+  start();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (current) build(JSON.parse(current)); });
   window.addEventListener('resize', function () { if (current) build(JSON.parse(current)); });
 })();
 </script>
