@@ -14,6 +14,13 @@
     background:
       radial-gradient(ellipse 70% 60% at 50% 45%, rgba(122,20,36,.55) 0%, rgba(74,10,22,.35) 45%, rgba(20,3,8,0) 80%),
       linear-gradient(180deg, #2a0610 0%, #1a040b 55%, #12030a 100%); }
+  .glow { position:fixed; width:70vw; height:70vw; border-radius:50%; pointer-events:none; z-index:0;
+    background:radial-gradient(circle, rgba(217,178,90,.10) 0%, rgba(217,178,90,0) 60%); will-change:transform; }
+  .glow.a { top:-30vw; left:-20vw; animation:drift1 46s ease-in-out infinite alternate; }
+  .glow.b { bottom:-35vw; right:-25vw; background:radial-gradient(circle, rgba(160,30,50,.22) 0%, rgba(160,30,50,0) 60%); animation:drift2 58s ease-in-out infinite alternate; }
+  @keyframes drift1 { from { transform:translate(0,0); } to { transform:translate(18vw,12vh); } }
+  @keyframes drift2 { from { transform:translate(0,0); } to { transform:translate(-16vw,-10vh); } }
+  .cross { position:fixed; top:56%; left:50%; width:34vh; height:46vh; transform:translate(-50%,-50%); opacity:.055; z-index:1; pointer-events:none; }
   .frame { position:fixed; inset:2.2vh 1.6vw; border:1px solid rgba(217,178,90,.45); pointer-events:none; }
   .frame::after { content:''; position:absolute; inset:.9vh .6vw; border:1px solid rgba(217,178,90,.18); }
 
@@ -38,7 +45,11 @@
     color:var(--gold); font-size:5.2vh; margin-bottom:3.4vh; }
   .group h2::before, .group h2::after { content:''; width:6vw; height:1px; background:rgba(217,178,90,.6); }
   .entry { margin-bottom:3.2vh; }
-  .name { font-weight:600; font-size:4.6vh; letter-spacing:.05em; text-transform:uppercase; line-height:1.15; }
+  .group h2 { margin-bottom:1.2vh; }
+  .vline { font-family:'Playfair Display', Georgia, serif; font-style:italic; font-size:2.4vh; color:rgba(236,217,166,.82); margin:0 0 3.6vh; }
+  .vline span { font-family:'Montserrat', Arial, sans-serif; font-style:normal; font-size:1.5vh; letter-spacing:.24em; color:var(--gold); margin-left:1vw; }
+  .date { font-size:1.7vh; font-weight:600; letter-spacing:.32em; text-transform:uppercase; color:var(--gold); padding-bottom:1vh; }
+  .name { font-weight:600; font-size:5vh; letter-spacing:.05em; text-transform:uppercase; line-height:1.15; }
   .sub { color:var(--gold-soft); font-weight:500; font-size:2.4vh; letter-spacing:.28em; text-transform:uppercase; margin:.5vh 0; }
 
   .empty { color:var(--gold-soft); font-family:'Playfair Display', Georgia, serif; font-style:italic; font-size:4.4vh; }
@@ -54,6 +65,8 @@
 </style>
 </head>
 <body>
+  <div class="glow a"></div><div class="glow b"></div>
+  <svg class="cross" viewBox="0 0 60 80" aria-hidden="true"><path d="M24 0h12v22h24v12H36v46H24V34H0V22h24z" fill="#d9b25a"/></svg>
   <div class="frame"></div>
   <header>
     <div class="church" id="church">Whitehouse Church of God in Christ</div>
@@ -66,6 +79,7 @@
       <svg class="qr" viewBox="0 0 41 41" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges"><path d="M0 0h7v1h-7zM8 0h2v1h-2zM11 0h1v1h-1zM16 0h1v1h-1zM18 0h1v1h-1zM20 0h1v1h-1zM22 0h2v1h-2zM25 0h2v1h-2zM34 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h1v1h-1zM10 1h1v1h-1zM12 1h2v1h-2zM15 1h3v1h-3zM19 1h2v1h-2zM22 1h1v1h-1zM24 1h2v1h-2zM31 1h1v1h-1zM34 1h1v1h-1zM40 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM8 2h2v1h-2zM12 2h1v1h-1zM14 2h8v1h-8zM24 2h3v1h-3zM30 2h1v1h-1zM34 2h1v1h-1zM36 2h3v1h-3zM40 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM9 3h1v1h-1zM14 3h2v1h-2zM20 3h1v1h-1zM22 3h4v1h-4zM28 3h1v1h-1zM32 3h1v1h-1zM34 3h1v1h-1zM36 3h3v1h-3zM40 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM16 4h1v1h-1zM18 4h1v1h-1zM21 4h1v1h-1zM23 4h1v1h-1zM27 4h4v1h-4zM34 4h1v1h-1zM36 4h3v1h-3zM40 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM11 5h2v1h-2zM14 5h3v1h-3zM20 5h1v1h-1zM23 5h4v1h-4zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h1v1h-1zM40 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM24 6h1v1h-1zM26 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h7v1h-7zM15 7h2v1h-2zM19 7h2v1h-2zM22 7h2v1h-2zM25 7h1v1h-1zM30 7h3v1h-3zM0 8h1v1h-1zM3 8h6v1h-6zM10 8h1v1h-1zM12 8h6v1h-6zM19 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h4v1h-4zM31 8h1v1h-1zM33 8h1v1h-1zM36 8h1v1h-1zM38 8h3v1h-3zM2 9h2v1h-2zM7 9h3v1h-3zM11 9h1v1h-1zM13 9h1v1h-1zM16 9h1v1h-1zM18 9h6v1h-6zM25 9h3v1h-3zM30 9h2v1h-2zM36 9h1v1h-1zM39 9h1v1h-1zM0 10h2v1h-2zM4 10h1v1h-1zM6 10h5v1h-5zM12 10h3v1h-3zM17 10h1v1h-1zM21 10h1v1h-1zM23 10h2v1h-2zM27 10h1v1h-1zM33 10h1v1h-1zM35 10h2v1h-2zM38 10h1v1h-1zM0 11h4v1h-4zM5 11h1v1h-1zM7 11h3v1h-3zM12 11h2v1h-2zM16 11h3v1h-3zM20 11h1v1h-1zM23 11h1v1h-1zM27 11h1v1h-1zM29 11h5v1h-5zM37 11h1v1h-1zM39 11h2v1h-2zM1 12h3v1h-3zM6 12h7v1h-7zM15 12h1v1h-1zM24 12h2v1h-2zM28 12h2v1h-2zM32 12h1v1h-1zM34 12h2v1h-2zM39 12h2v1h-2zM0 13h2v1h-2zM4 13h2v1h-2zM10 13h3v1h-3zM15 13h1v1h-1zM17 13h4v1h-4zM22 13h2v1h-2zM27 13h2v1h-2zM30 13h1v1h-1zM33 13h2v1h-2zM36 13h1v1h-1zM39 13h2v1h-2zM0 14h1v1h-1zM3 14h1v1h-1zM5 14h3v1h-3zM9 14h1v1h-1zM14 14h1v1h-1zM16 14h1v1h-1zM19 14h4v1h-4zM24 14h1v1h-1zM26 14h2v1h-2zM29 14h3v1h-3zM33 14h2v1h-2zM36 14h1v1h-1zM40 14h1v1h-1zM2 15h4v1h-4zM7 15h3v1h-3zM12 15h4v1h-4zM20 15h1v1h-1zM23 15h2v1h-2zM28 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM35 15h4v1h-4zM0 16h1v1h-1zM2 16h1v1h-1zM5 16h4v1h-4zM10 16h4v1h-4zM18 16h1v1h-1zM21 16h6v1h-6zM28 16h1v1h-1zM33 16h1v1h-1zM37 16h1v1h-1zM40 16h1v1h-1zM1 17h2v1h-2zM4 17h2v1h-2zM7 17h1v1h-1zM11 17h1v1h-1zM14 17h1v1h-1zM16 17h2v1h-2zM19 17h4v1h-4zM26 17h2v1h-2zM29 17h1v1h-1zM31 17h3v1h-3zM36 17h2v1h-2zM1 18h3v1h-3zM5 18h2v1h-2zM9 18h3v1h-3zM13 18h2v1h-2zM16 18h5v1h-5zM23 18h1v1h-1zM27 18h5v1h-5zM35 18h2v1h-2zM40 18h1v1h-1zM1 19h1v1h-1zM3 19h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM14 19h1v1h-1zM16 19h1v1h-1zM21 19h1v1h-1zM25 19h1v1h-1zM32 19h3v1h-3zM36 19h1v1h-1zM38 19h1v1h-1zM40 19h1v1h-1zM1 20h2v1h-2zM4 20h4v1h-4zM9 20h1v1h-1zM13 20h1v1h-1zM16 20h1v1h-1zM18 20h4v1h-4zM24 20h1v1h-1zM26 20h2v1h-2zM29 20h4v1h-4zM34 20h1v1h-1zM38 20h3v1h-3zM0 21h3v1h-3zM5 21h1v1h-1zM8 21h2v1h-2zM12 21h1v1h-1zM16 21h1v1h-1zM19 21h4v1h-4zM25 21h2v1h-2zM29 21h4v1h-4zM35 21h2v1h-2zM38 21h1v1h-1zM0 22h1v1h-1zM2 22h6v1h-6zM9 22h1v1h-1zM13 22h2v1h-2zM16 22h1v1h-1zM22 22h4v1h-4zM27 22h1v1h-1zM34 22h4v1h-4zM1 23h5v1h-5zM9 23h1v1h-1zM11 23h3v1h-3zM17 23h4v1h-4zM22 23h1v1h-1zM26 23h1v1h-1zM28 23h2v1h-2zM31 23h5v1h-5zM37 23h1v1h-1zM39 23h1v1h-1zM2 24h2v1h-2zM5 24h3v1h-3zM13 24h2v1h-2zM16 24h1v1h-1zM19 24h2v1h-2zM23 24h2v1h-2zM27 24h2v1h-2zM32 24h1v1h-1zM34 24h4v1h-4zM39 24h2v1h-2zM2 25h1v1h-1zM4 25h1v1h-1zM8 25h2v1h-2zM14 25h5v1h-5zM23 25h1v1h-1zM25 25h3v1h-3zM30 25h1v1h-1zM32 25h2v1h-2zM35 25h2v1h-2zM38 25h3v1h-3zM0 26h1v1h-1zM3 26h4v1h-4zM8 26h8v1h-8zM17 26h1v1h-1zM19 26h3v1h-3zM27 26h1v1h-1zM30 26h3v1h-3zM34 26h1v1h-1zM36 26h2v1h-2zM39 26h2v1h-2zM4 27h2v1h-2zM8 27h4v1h-4zM13 27h1v1h-1zM19 27h1v1h-1zM22 27h2v1h-2zM27 27h2v1h-2zM31 27h1v1h-1zM34 27h6v1h-6zM1 28h2v1h-2zM4 28h1v1h-1zM6 28h3v1h-3zM10 28h2v1h-2zM14 28h4v1h-4zM19 28h5v1h-5zM25 28h1v1h-1zM27 28h1v1h-1zM29 28h1v1h-1zM31 28h3v1h-3zM35 28h1v1h-1zM37 28h1v1h-1zM39 28h1v1h-1zM0 29h1v1h-1zM2 29h2v1h-2zM10 29h1v1h-1zM14 29h5v1h-5zM20 29h3v1h-3zM27 29h1v1h-1zM29 29h5v1h-5zM36 29h1v1h-1zM40 29h1v1h-1zM0 30h2v1h-2zM3 30h4v1h-4zM8 30h1v1h-1zM10 30h3v1h-3zM15 30h1v1h-1zM17 30h2v1h-2zM20 30h4v1h-4zM25 30h7v1h-7zM33 30h1v1h-1zM40 30h1v1h-1zM0 31h3v1h-3zM5 31h1v1h-1zM8 31h1v1h-1zM10 31h2v1h-2zM13 31h1v1h-1zM18 31h1v1h-1zM23 31h1v1h-1zM25 31h1v1h-1zM27 31h2v1h-2zM30 31h1v1h-1zM32 31h1v1h-1zM34 31h2v1h-2zM37 31h4v1h-4zM0 32h7v1h-7zM13 32h3v1h-3zM23 32h1v1h-1zM27 32h1v1h-1zM31 32h8v1h-8zM40 32h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h1v1h-1zM17 33h1v1h-1zM19 33h1v1h-1zM23 33h1v1h-1zM29 33h1v1h-1zM32 33h1v1h-1zM36 33h1v1h-1zM38 33h2v1h-2zM0 34h7v1h-7zM8 34h1v1h-1zM10 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h1v1h-1zM27 34h1v1h-1zM31 34h2v1h-2zM34 34h1v1h-1zM36 34h2v1h-2zM0 35h1v1h-1zM6 35h1v1h-1zM8 35h3v1h-3zM15 35h1v1h-1zM18 35h1v1h-1zM20 35h1v1h-1zM28 35h2v1h-2zM31 35h2v1h-2zM36 35h2v1h-2zM39 35h1v1h-1zM0 36h1v1h-1zM2 36h3v1h-3zM6 36h1v1h-1zM8 36h3v1h-3zM12 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h3v1h-3zM27 36h1v1h-1zM31 36h6v1h-6zM38 36h1v1h-1zM0 37h1v1h-1zM2 37h3v1h-3zM6 37h1v1h-1zM8 37h3v1h-3zM12 37h1v1h-1zM15 37h1v1h-1zM17 37h2v1h-2zM20 37h1v1h-1zM22 37h2v1h-2zM26 37h3v1h-3zM31 37h1v1h-1zM35 37h1v1h-1zM40 37h1v1h-1zM0 38h1v1h-1zM2 38h3v1h-3zM6 38h1v1h-1zM9 38h1v1h-1zM11 38h2v1h-2zM14 38h1v1h-1zM16 38h1v1h-1zM19 38h1v1h-1zM22 38h1v1h-1zM26 38h2v1h-2zM29 38h2v1h-2zM33 38h1v1h-1zM35 38h4v1h-4zM40 38h1v1h-1zM0 39h1v1h-1zM6 39h1v1h-1zM9 39h1v1h-1zM12 39h1v1h-1zM15 39h1v1h-1zM17 39h2v1h-2zM20 39h1v1h-1zM23 39h2v1h-2zM28 39h1v1h-1zM33 39h2v1h-2zM36 39h1v1h-1zM38 39h1v1h-1zM40 39h1v1h-1zM0 40h7v1h-7zM8 40h1v1h-1zM10 40h2v1h-2zM14 40h2v1h-2zM17 40h4v1h-4zM22 40h4v1h-4zM28 40h1v1h-1zM32 40h1v1h-1zM36 40h2v1h-2z" fill="#140308"/></svg>
       <p><b>Scan to add a name</b></p>
     </div>
+    <div class="date" id="today"></div>
     <div class="verse">“Pray one for another.”<small>JAMES 5:16</small></div>
   </footer>
 <script>
@@ -74,6 +88,11 @@
   var SRC = 'https://script.google.com/macros/s/AKfycbzcFaVFS4n-bWvzG9hpX1CDxLVIeSpvKijiQdrmE155D93uLo7nsO3fmUW5iRQRupfB2g/exec';
   var REFRESH_MS = 60 * 1000;
   var SMALL = { 'The Family of': 1, 'and Family': 1 };
+  var VERSES = {
+    'Bereaved Families': ['\u201cBlessed are they that mourn: for they shall be comforted.\u201d', 'MATTHEW 5:4'],
+    'Sick & Shut-In': ['\u201cThe prayer of faith shall save the sick.\u201d', 'JAMES 5:15'],
+    'Prayer List': ['\u201cPray without ceasing.\u201d', '1 THESSALONIANS 5:17']
+  };
   var current = '', pending = null;
   var track = document.getElementById('track'), view = document.getElementById('view');
 
@@ -89,6 +108,11 @@
     d.groups.forEach(function (g) {
       var grp = el('div', 'group');
       grp.appendChild(el('h2', null, g.title));
+      if (VERSES[g.title]) {
+        var v = el('div', 'vline', VERSES[g.title][0]);
+        v.appendChild(el('span', null, VERSES[g.title][1]));
+        grp.appendChild(v);
+      }
       g.names.forEach(function (lines) {
         var en = el('div', 'entry');
         lines.forEach(function (t) { en.appendChild(el('div', SMALL[t] ? 'sub' : 'name', t)); });
@@ -145,6 +169,13 @@
   }
 
   function start() { refresh(); setInterval(refresh, REFRESH_MS); }
+  function showDate() {
+    var d = new Date();
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    document.getElementById('today').textContent = days[d.getDay()] + ' \u00b7 ' + months[d.getMonth()] + ' ' + d.getDate();
+  }
+  showDate(); setInterval(showDate, 60000);
   start();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (current) build(JSON.parse(current)); });
   window.addEventListener('resize', function () { if (current) build(JSON.parse(current)); });
