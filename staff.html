@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prayer List Quick Add</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root { --maroon:#5a0d1b; --deep:#2a0610; --gold:#d9b25a; --ink:#1d1416; --line:#e6dcd2; --bg:#faf6f1; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 'Montserrat', Arial, sans-serif; }
+  header { background:linear-gradient(135deg, var(--maroon), var(--deep)); color:#fff; padding:18px 18px 16px; }
+  header small { color:var(--gold); font-weight:600; letter-spacing:.18em; font-size:11px; text-transform:uppercase; }
+  header h1 { font-family:'Playfair Display', Georgia, serif; margin:4px 0 0; font-size:26px; }
+  main { max-width:520px; margin:0 auto; padding:16px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:16px; }
+  label { display:block; font-weight:600; font-size:13px; margin:12px 0 6px; color:#5b4a4d; }
+  .seg { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px; }
+  .seg button { min-height:48px; border:1px solid var(--line); background:#fff; border-radius:10px; font:600 13px 'Montserrat', sans-serif; color:var(--ink); padding:6px; }
+  .seg button.on { background:var(--maroon); color:#fff; border-color:var(--maroon); }
+  input, select { width:100%; min-height:48px; border:1px solid var(--line); border-radius:10px; padding:10px 12px; font:16px 'Montserrat', sans-serif; background:#fff; }
+  .row { display:grid; grid-template-columns:110px minmax(0,1fr); gap:8px; }
+  .go { width:100%; min-height:54px; margin-top:16px; border:0; border-radius:12px; background:var(--gold); color:var(--deep); font:700 17px 'Montserrat', sans-serif; }
+  .go:disabled { opacity:.5; }
+  .msg { min-height:22px; margin-top:10px; font-weight:600; font-size:14px; }
+  .ok { color:#1d6b3a; } .err { color:#a01b2b; }
+  h2 { font-size:15px; margin:0 0 4px; }
+  .hint { color:#7b6a6d; font-size:13px; margin:0 0 10px; }
+  .item { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 0; border-top:1px solid var(--line); }
+  .item b { display:block; font-size:15px; }
+  .item span { color:#7b6a6d; font-size:12px; }
+  .rm { min-height:40px; min-width:84px; border:1px solid #d9b3b8; background:#fff; color:#a01b2b; border-radius:10px; font:600 13px 'Montserrat', sans-serif; }
+  #lock { text-align:center; }
+  #lock input { text-align:center; font-size:24px; letter-spacing:.3em; max-width:220px; margin:8px auto 0; display:block; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<header><small>Whitehouse COGIC · Media Team</small><h1>Prayer List Quick Add</h1></header>
+<main>
+  <div class="card" id="lock">
+    <h2>Enter the team PIN</h2>
+    <input id="pin" type="password" inputmode="numeric" autocomplete="off">
+    <button class="go" id="unlock">Unlock</button>
+    <div class="msg" id="lockmsg"></div>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="card">
+      <label>Which list?</label>
+      <div class="seg" id="list">
+        <button data-v="Sick & Shut-In" class="on">Sick &amp; Shut-In</button>
+        <button data-v="Prayer List">Prayer List</button>
+        <button data-v="Bereaved Families">Bereaved</button>
+      </div>
+      <label for="name">Name</label>
+      <div class="row">
+        <select id="title">
+          <option value="">(none)</option><option>Sis.</option><option>Bro.</option><option>Mother</option>
+          <option>Dea.</option><option>Elder</option><option>Min.</option><option>Evang.</option>
+          <option>Supt.</option><option>Pastor</option><option>Bishop</option>
+        </select>
+        <input id="name" placeholder="First and last name" autocomplete="off">
+      </div>
+      <label>How should it show?</label>
+      <div class="seg" id="fam">
+        <button data-v="Just the name" class="on">Just name</button>
+        <button data-v="Name and Family">and Family</button>
+        <button data-v="The Family of (name)">Family of</button>
+      </div>
+      <button class="go" id="add">Add to Screen</button>
+      <div class="msg" id="addmsg"></div>
+    </div>
+
+    <div class="card">
+      <h2>On the screen now</h2>
+      <p class="hint">Remove takes a name off the TVs within a minute. It stays in the sheet.</p>
+      <div id="items"></div>
+    </div>
+  </div>
+</main>
+<script>
+(function () {
+  var PIN = '';
+  try { PIN = localStorage.getItem('prayerPin') || ''; } catch (e) {}
+  var EXEC = 'https://script.google.com/macros/s/AKfycbzcFaVFS4n-bWvzG9hpX1CDxLVIeSpvKijiQdrmE155D93uLo7nsO3fmUW5iRQRupfB2g/exec';
+  var seq = 0;
+  function call(action, params, ok, fail) {
+    var cb = '__staffCb' + (++seq), s = document.createElement('script'), done = false;
+    var q = ['callback=' + cb, 'action=' + action, 'pin=' + encodeURIComponent(PIN), 't=' + new Date().getTime()];
+    for (var k in params) q.push(k + '=' + encodeURIComponent(params[k]));
+    var timer = setTimeout(function () { finish(); fail({ message: 'No answer from Google. Check the internet and try again.' }); }, 20000);
+    function finish() { done = true; clearTimeout(timer); try { delete window[cb]; } catch (e) { window[cb] = undefined; } if (s.parentNode) s.parentNode.removeChild(s); }
+    window[cb] = function (res) { if (done) return; finish(); if (res && res.error) fail({ message: res.error }); else ok(res); };
+    s.onerror = function () { if (done) return; finish(); fail({ message: 'Could not reach Google. Try again.' }); };
+    s.src = EXEC + '?' + q.join('&');
+    document.head.appendChild(s);
+  }
+  function $(id) { return document.getElementById(id); }
+  function seg(id) {
+    var el = $(id);
+    el.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      [].forEach.call(el.querySelectorAll('button'), function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+    });
+    return function () { return el.querySelector('.on').getAttribute('data-v'); };
+  }
+  var getList = seg('list'), getFam = seg('fam');
+  function say(id, text, ok) { var m = $(id); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); }
+
+  function render(items) {
+    var box = $('items'); box.textContent = '';
+    if (!items.length) { var p = document.createElement('p'); p.className = 'hint'; p.textContent = 'No names are on the screen right now.'; box.appendChild(p); return; }
+    items.forEach(function (it) {
+      var row = document.createElement('div'); row.className = 'item';
+      var t = document.createElement('div');
+      var b = document.createElement('b'); b.textContent = it.display; t.appendChild(b);
+      var s = document.createElement('span'); s.textContent = it.list + ' · until ' + it.until; t.appendChild(s);
+      var r = document.createElement('button'); r.className = 'rm'; r.textContent = 'Remove';
+      r.onclick = function () {
+        r.disabled = true; r.textContent = '…';
+        call('remove', { row: it.row }, render, function (e) { r.disabled = false; r.textContent = 'Remove'; alertErr(e); });
+      };
+      row.appendChild(t); row.appendChild(r); box.appendChild(row);
+    });
+  }
+  function alertErr(e) { say('addmsg', (e && e.message) || 'Something went wrong. Try again.', false); }
+
+  function open() {
+    say('lockmsg', 'Checking…', true);
+    call('list', {}, function (items) {
+        try { localStorage.setItem('prayerPin', PIN); } catch (e) {}
+        $('lockmsg').textContent = '';
+        $('lock').classList.add('hidden'); $('app').classList.remove('hidden'); render(items);
+      }, function (e) {
+        try { localStorage.removeItem('prayerPin'); } catch (x) {}
+        $('lock').classList.remove('hidden'); $('app').classList.add('hidden');
+        say('lockmsg', /PIN/.test(e.message) ? "That PIN didn't work." : e.message, false);
+      });
+  }
+  $('unlock').onclick = function () { PIN = $('pin').value.trim(); open(); };
+  $('pin').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('unlock').click(); });
+
+  $('add').onclick = function () {
+    var name = $('name').value.trim();
+    if (!name) { say('addmsg', 'Type a name first.', false); $('name').focus(); return; }
+    var btn = $('add'); btn.disabled = true; btn.textContent = 'Adding…';
+    call('add', { list: getList(), title: $('title').value, name: name, family: getFam() }, function (items) {
+        btn.disabled = false; btn.textContent = 'Add to Screen';
+        say('addmsg', 'Added. It will show on the TVs within a minute.', true);
+        $('name').value = ''; $('title').value = ''; render(items);
+      }, function (e) { btn.disabled = false; btn.textContent = 'Add to Screen'; alertErr(e); });
+  };
+
+  if (PIN) open();
+})();
+</script>
+</body>
+</html>
