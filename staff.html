@@ -33,6 +33,11 @@
   .rm { min-height:40px; min-width:84px; border:1px solid #d9b3b8; background:#fff; color:#a01b2b; border-radius:10px; font:600 13px 'Montserrat', sans-serif; }
   #lock { text-align:center; }
   #lock input { text-align:center; font-size:24px; letter-spacing:.3em; max-width:220px; margin:8px auto 0; display:block; }
+  .timing { display:flex; align-items:center; justify-content:space-between; gap:12px; background:#f6efe3; border:1px solid #e6d3ae; }
+  .timing small { display:block; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#7a5a1c; }
+  .timing .big { font-family:'Playfair Display', Georgia, serif; font-size:34px; font-weight:700; color:var(--maroon); line-height:1.1; }
+  .timing .sub { font-size:13px; color:#5b4a4d; margin-top:2px; }
+  .timing .count { text-align:right; }
   .hidden { display:none; }
 </style>
 </head>
@@ -73,6 +78,18 @@
       <div class="msg" id="addmsg"></div>
     </div>
 
+    <div class="card timing" aria-live="polite">
+      <div>
+        <small>Set the Proclaim slide to</small>
+        <div class="big" id="secs">0 seconds</div>
+        <div class="sub" id="scroll">One full scroll takes about 0 seconds.</div>
+      </div>
+      <div class="count">
+        <small>Names on screen</small>
+        <div class="big" id="count">0</div>
+      </div>
+    </div>
+
     <div class="card">
       <h2>On the screen now</h2>
       <p class="hint">Remove takes a name off the TVs within a minute. It stays in the sheet.</p>
@@ -110,7 +127,16 @@
   var getList = seg('list'), getFam = seg('fam');
   function say(id, text, ok) { var m = $(id); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); }
 
+  function timing(n) {
+    var scroll = 12 + 3 * n;                       // about 3 seconds per name, plus 12
+    var slide = n ? Math.ceil(scroll / 5) * 5 : 15;
+    $('count').textContent = n;
+    $('secs').textContent = slide + ' seconds';
+    $('scroll').textContent = n ? 'One full scroll takes about ' + scroll + ' seconds.' : 'No names yet. The screen shows the welcome line.';
+  }
+
   function render(items) {
+    timing(items.length);
     var box = $('items'); box.textContent = '';
     if (!items.length) { var p = document.createElement('p'); p.className = 'hint'; p.textContent = 'No names are on the screen right now.'; box.appendChild(p); return; }
     items.forEach(function (it) {
