@@ -32,10 +32,9 @@
   .rule i { width:1vh; height:1vh; background:var(--gold); transform:rotate(45deg); }
 
   .view { position:fixed; top:23vh; bottom:16vh; left:0; right:0; overflow:hidden; z-index:2;
- }
-  .view::before, .view::after { content:''; position:absolute; left:0; right:0; height:9%; z-index:2; pointer-events:none; }
-  .view::before { top:0; background:linear-gradient(180deg, #24050e 0%, rgba(36,5,14,0) 100%); }
-  .view::after { bottom:0; background:linear-gradient(0deg, #1c040b 0%, rgba(28,4,11,0) 100%); }
+
+    -webkit-mask-image:linear-gradient(180deg, transparent 0, #000 12%, #000 86%, transparent 100%);
+            mask-image:linear-gradient(180deg, transparent 0, #000 12%, #000 86%, transparent 100%); }
   .track { position:absolute; top:0; left:0; right:0; will-change:transform; backface-visibility:hidden; transform:translate3d(0,0,0); }
   .track.static { position:absolute; top:50%; left:0; right:0; transform:translateY(-50%); }
   .copy { padding:6vh 0 4vh; text-align:center; }
